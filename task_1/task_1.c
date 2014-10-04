@@ -39,5 +39,5 @@ int main()
         printf("=\n%.2lf",del(a,b));
      break;
     }
-    return(0);
+    return 0;
 }
