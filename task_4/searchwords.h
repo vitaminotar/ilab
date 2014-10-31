@@ -1,7 +1,7 @@
 #ifndef SEARCHWORDS
 #define SEARCHWORDS
 #include<stdio.h>
-FILE *file;
+
 typedef struct
 {
     long long Num_of_words;

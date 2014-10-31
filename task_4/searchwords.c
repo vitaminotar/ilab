@@ -4,6 +4,7 @@
 #include<limits.h>
 Word_String *res(char *name_of_file)
 {
+    FILE *file;
     if (!name_of_file)
         {
             errno = EFAULT;

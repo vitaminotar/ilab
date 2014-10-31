@@ -10,18 +10,18 @@ stack *Stack_Constructor(int Size)
     if (my_stack)
     {
         my_stack->data = (int*)malloc((Size) * sizeof(double));
-        if (my_stack->data!=0)
+        if (my_stack->data!=NULL)
         {
             my_stack->Max = Size;
             my_stack->size = 0;
             my_stack->top = my_stack->data[0];
+            return my_stack;
         }
         else
         {
             errno = ENOMEM;
             return NULL;
         }
-        return my_stack;
     }
     else
     {
@@ -37,7 +37,7 @@ int Stack_OK(stack *my_stack)
     if (!my_stack)
         {
             errno = EFAULT;
-
+            return -1;
         }
     if (my_stack->size < 0)
         {
@@ -65,7 +65,6 @@ int Destroy(stack *my_stack)
         return -1;
     free(my_stack->data);
     free(my_stack);
-    Stack_dump(my_stack);
     errno = 0;
     return 0;
 }
@@ -74,8 +73,7 @@ int stack_size(stack *my_stack)
 {
     if(Stack_OK(my_stack))
         return -1;
-    Stack_dump(my_stack);
-    return my_stack-> size;
+    return my_stack->size;
 }
 
 
@@ -91,7 +89,7 @@ int push (stack *my_stack, double i)
         return 0;
     }
     else
-        Stack_dump(my_stack);
+        errno = E2BIG;
     return -1;
 
 }
@@ -123,7 +121,7 @@ double topp(stack *my_stack)
 int clear(stack *my_stack)
 {
     Stack_OK(my_stack);
-    if (Stack_OK)
+    if (Stack_OK(my_stack))
         Stack_dump(my_stack);
     else
         {
@@ -144,6 +142,8 @@ int empty(stack *my_stack)
 
 int full(stack *my_stack)
 {
+    if (Stack_OK(my_stack))
+        Stack_dump(my_stack);
     if(my_stack->size == my_stack->Max)
         return -1;
     else
@@ -164,7 +164,6 @@ int Stack_dump(stack *my_stack)
         int i = 0;
         if (!empty(my_stack))
         {
-            printf("SUCK");
             while(my_stack->size--)
             {
                 fprintf(fp,"%lf",pop(my_stack));
@@ -188,6 +187,9 @@ int Stack_dump(stack *my_stack)
                 break;
             case EINVAL:
                 fprintf(fp,"Stack head is not a vailiable");
+                break;
+            case E2BIG:
+                fprintf(fp,"Stack is very big1");
                 break;
             default:
                 fprintf(fp,"Unknown error");
